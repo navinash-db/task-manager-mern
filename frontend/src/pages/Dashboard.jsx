@@ -6,6 +6,7 @@ function Dashboard() {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [editingTask, setEditingTask] = useState(null);
 
   useEffect(() => {
     fetchTasks();
@@ -43,39 +44,14 @@ function Dashboard() {
   }
 };
 
-const completeTask = async (id) => {
-  try {
-    const token = localStorage.getItem("token");
-
-    await api.put(
-      `/tasks/${id}`,
-      {
-        status: "Completed",
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    fetchTasks();
-  } catch (error) {
-    console.error(error.response?.data || error.message);
-  }
-};
-
-  const createTask = async (e) => {
-    e.preventDefault();
-
+  const completeTask = async (id) => {
     try {
       const token = localStorage.getItem("token");
 
-      await api.post(
-        "/tasks",
+      await api.put(
+        `/tasks/${id}`,
         {
-          title,
-          description,
+          status: "Completed",
         },
         {
           headers: {
@@ -83,6 +59,55 @@ const completeTask = async (id) => {
           },
         }
       );
+
+      fetchTasks();
+    } catch (error) {
+      console.error(error.response?.data || error.message);
+    }
+  };
+
+  const editTask = (task) => {
+    setEditingTask(task);
+
+    setTitle(task.title);
+    setDescription(task.description);
+  };
+
+  const createTask = async (e) => {
+    e.preventDefault();
+
+    try {
+      const token = localStorage.getItem("token");
+
+      if (editingTask) {
+        await api.put(
+          `/tasks/${editingTask._id}`,
+          {
+            title,
+            description,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setEditingTask(null);
+      } else {
+        await api.post(
+          "/tasks",
+          {
+            title,
+            description,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }
 
       setTitle("");
       setDescription("");
@@ -139,7 +164,7 @@ const completeTask = async (id) => {
         className="add-btn"
         type="submit"
       >
-        Add Task
+        {editingTask ? "Update Task" : "Add Task"}
       </button>
     </form>
 
@@ -167,22 +192,29 @@ const completeTask = async (id) => {
     </p>
 
     <div className="action-buttons">
-      {task.status !== "Completed" && (
-        <button
-          className="complete-btn"
-          onClick={() => completeTask(task._id)}
-        >
-          Mark Complete
-        </button>
-      )}
+  <button
+    className="edit-btn"
+    onClick={() => editTask(task)}
+  >
+    Edit
+  </button>
 
-      <button
-        className="delete-btn"
-        onClick={() => deleteTask(task._id)}
-      >
-        Delete
-      </button>
-    </div>
+  {task.status !== "Completed" && (
+    <button
+      className="complete-btn"
+      onClick={() => completeTask(task._id)}
+    >
+      Mark Complete
+    </button>
+  )}
+
+  <button
+    className="delete-btn"
+    onClick={() => deleteTask(task._id)}
+  >
+    Delete
+  </button>
+</div>
   </div>
 ))}
       </div>

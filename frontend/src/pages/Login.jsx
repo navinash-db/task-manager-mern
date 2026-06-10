@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import api from "../services/api";
+import "./Auth.css";
 
 function Login() {
   const navigate = useNavigate();
@@ -25,49 +27,53 @@ function Login() {
 
       localStorage.setItem("token", response.data.token);
 
-      alert("Login Successful!");
+      toast.success("Login Successful!");
 
       navigate("/dashboard");
     } catch (error) {
       console.error(error.response?.data || error.message);
 
-      alert("Login Failed");
+      toast.error("Login Failed");
     }
   };
 
   return (
-    <div>
-      <h1>Login</h1>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h1 className="auth-title">Login</h1>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
+        <form
+          className="auth-form"
+          onSubmit={handleSubmit}
+        >
+          <input
+            className="auth-input"
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
 
-        <br />
-        <br />
+          <input
+            className="auth-input"
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-
-        <br />
-        <br />
-
-        <button type="submit">
-          Login
-        </button>
-      </form>
+          <button
+            className="auth-btn"
+            type="submit"
+          >
+            Login
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

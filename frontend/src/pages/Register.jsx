@@ -1,5 +1,7 @@
 import { useState } from "react";
 import api from "../services/api";
+import "./Auth.css";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -16,64 +18,78 @@ const Register = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const response = await api.post("/auth/register", formData);
+    try {
+      const response = await api.post(
+        "/auth/register",
+        formData
+      );
 
-    console.log(response.data);
+      console.log(response.data);
 
-    alert("Registration Successful!");
-  } catch (error) {
-    console.error(error.response?.data || error.message);
+      toast.success("Registration Successful!");
 
-    alert("Registration Failed");
-  }
-};
+      window.location.href = "/login";
+    } catch (error) {
+      console.error(
+        error.response?.data ||
+        error.message
+      );
+
+      toast.error("Registration Failed");
+    }
+  };
 
   return (
-    <div style={{ padding: "40px" }}>
-      <h1>Register</h1>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h1 className="auth-title">
+          Register
+        </h1>
 
-      <form onSubmit={handleSubmit}>
-        <div>
+        <form
+          className="auth-form"
+          onSubmit={handleSubmit}
+        >
           <input
+            className="auth-input"
             type="text"
             name="name"
             placeholder="Name"
             value={formData.name}
             onChange={handleChange}
+            required
           />
-        </div>
 
-        <br />
-
-        <div>
           <input
+            className="auth-input"
             type="email"
             name="email"
             placeholder="Email"
             value={formData.email}
             onChange={handleChange}
+            required
           />
-        </div>
 
-        <br />
-
-        <div>
           <input
+            className="auth-input"
             type="password"
             name="password"
             placeholder="Password"
             value={formData.password}
             onChange={handleChange}
+            required
           />
-        </div>
 
-        <br />
-
-        <button type="submit">Register</button>
-      </form>
+          <button
+            className="auth-btn"
+            type="submit"
+          >
+            Register
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
