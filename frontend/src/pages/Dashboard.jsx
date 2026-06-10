@@ -174,7 +174,7 @@ function Dashboard() {
 
     {tasks.length === 0 ? (
       <p className="no-tasks">
-        No Tasks Found
+        No tasks yet. Create your first task above.
       </p>
     ) : (
       <div className="tasks-grid">
