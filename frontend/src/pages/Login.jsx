@@ -72,6 +72,11 @@ function Login() {
           >
             Login
           </button>
+
+          <p className="auth-link">
+            Don't have an account?{" "}
+            <a href="/register">Register here</a>
+          </p>
         </form>
       </div>
     </div>

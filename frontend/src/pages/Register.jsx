@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 import api from "../services/api";
 import "./Auth.css";
-import { toast } from "react-toastify";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -28,9 +28,11 @@ const Register = () => {
 
       console.log(response.data);
 
-      toast.success("Registration Successful!");
+      toast.success("Registration Successful! Please login.");
 
-      window.location.href = "/login";
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 1500);
     } catch (error) {
       console.error(
         error.response?.data ||
@@ -88,6 +90,11 @@ const Register = () => {
           >
             Register
           </button>
+
+          <p className="auth-link">
+            Already have an account?{" "}
+            <a href="/login">Login here</a>
+          </p>
         </form>
       </div>
     </div>
